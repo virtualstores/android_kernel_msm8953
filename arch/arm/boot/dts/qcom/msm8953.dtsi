@@ -119,8 +119,12 @@
 		sdhc2 = &sdhc_2; /* SDC2 for SD card */
 		i2c2 = &i2c_2;
 		i2c3 = &i2c_3;
-		i2c5 = &i2c_5;
+		/*i2c5 = &i2c_5;*/
 		spi3 = &spi_3;
+		spi6 = &spi_6;
+		serial0 = &blsp1_uart0;
+		serial1 = &blsp2_uart0;
+		serial2 = &blsp2_uart0_gs;
 	};
 
 	soc: soc { };
@@ -489,13 +493,13 @@
 		compatible = "qcom,msm-thermal";
 		qcom,sensor-id = <9>;
 		qcom,poll-ms = <250>;
-		qcom,limit-temp = <60>;
+		qcom,limit-temp = <105>;
 		qcom,temp-hysteresis = <10>;
 		qcom,freq-step = <2>;
-		qcom,core-limit-temp = <80>;
+		qcom,core-limit-temp = <110>;
 		qcom,core-temp-hysteresis = <10>;
-		qcom,hotplug-temp = <105>;
-		qcom,hotplug-temp-hysteresis = <15>;
+		qcom,hotplug-temp = <110>;
+		qcom,hotplug-temp-hysteresis = <10>;
 		qcom,freq-mitigation-temp = <105>;
 		qcom,freq-mitigation-temp-hysteresis = <15>;
 		qcom,freq-mitigation-value = <1036800>;
@@ -603,40 +607,62 @@
 		clock-names = "core_clk", "iface_clk";
 	};
 
-	blsp1_uart1: uart@78b0000 {
+	blsp2_uart0: serial@7AEF000 {
+		compatible = "qcom,msm-lsuart-v14";
+		reg = <0x7AEF000 0x200>;
+		interrupts = <0 306 0>;
+		status = "disabled";
+		clocks = <&clock_gcc clk_gcc_blsp2_uart1_apps_clk>,
+		<&clock_gcc clk_gcc_blsp2_ahb_clk>;
+		clock-names = "core_clk", "iface_clk";
+	};
+	blsp2_uart0_gs: uart@7AEF000 {
 		compatible = "qcom,msm-hsuart-v14";
-		reg = <0x78b0000 0x200>,
-			<0x7884000 0x1f000>;
+		reg = <0x7AEF000 0x200>,
+			<0x7AC4000 0x1f000>;
 		reg-names = "core_mem", "bam_mem";
 
 		interrupt-names = "core_irq", "bam_irq", "wakeup_irq";
 		#address-cells = <0>;
-		interrupt-parent = <&blsp1_uart1>;
+		interrupt-parent = <&blsp2_uart0_gs>;
 		interrupts = <0 1 2>;
 		#interrupt-cells = <1>;
 		interrupt-map-mask = <0xffffffff>;
-		interrupt-map = <0 &intc 0 108 0
-				1 &intc 0 238 0
-				2 &tlmm 13 0>;
+		interrupt-map = <0 &intc 0 306 0
+				1 &intc 0 239 0
+				2 &tlmm 17 0>;
 
 		qcom,inject-rx-on-wakeup;
 		qcom,rx-char-to-inject = <0xFD>;
-		qcom,master-id = <86>;
+		qcom,master-id = <84>;
 		clock-names = "core_clk", "iface_clk";
-		clocks = <&clock_gcc clk_gcc_blsp1_uart2_apps_clk>,
-			<&clock_gcc clk_gcc_blsp1_ahb_clk>;
+		clocks = <&clock_gcc clk_gcc_blsp2_uart1_apps_clk>,
+			<&clock_gcc clk_gcc_blsp2_ahb_clk>;
 		pinctrl-names = "sleep", "default";
 		pinctrl-0 = <&hsuart_sleep>;
 		pinctrl-1 = <&hsuart_active>;
-		qcom,bam-tx-ep-pipe-index = <2>;
-		qcom,bam-rx-ep-pipe-index = <3>;
-		qcom,msm-bus,name = "blsp1_uart1";
+		qcom,bam-tx-ep-pipe-index = <0>;
+		qcom,bam-rx-ep-pipe-index = <1>;
+		qcom,msm-bus,name = "blsp2_uart0_gs";
 		qcom,msm-bus,num-cases = <2>;
 		qcom,msm-bus,num-paths = <1>;
 		qcom,msm-bus,vectors-KBps =
-				<86 512 0 0>,
-				<86 512 500 800>;
-		status = "disabled";
+				<84 512 0 0>,
+				<84 512 500 800>;
+		status = "ok";
+	};
+
+	blsp1_uart2: uart@78b0000 {
+		compatible = "qcom,msm-lsuart-v14";
+		reg = <0x78b0000 0x200>;
+		interrupts = <0 108 0>;
+		status = "ok";
+		clocks = <&clock_gcc clk_gcc_blsp1_uart2_apps_clk>,
+		<&clock_gcc clk_gcc_blsp1_ahb_clk>;
+		clock-names = "core_clk", "iface_clk";
+		pinctrl-names = "default","sleep";
+		pinctrl-0 = <&uart4_active>;
+		pinctrl-1 = <&uart4_sleep>;
 	};
 
 	dma_blsp1: qcom,sps-dma@7884000 { /* BLSP1 */
@@ -678,6 +704,33 @@
 		qcom,bam-consumer-pipe-index = <8>;
 		qcom,bam-producer-pipe-index = <9>;
 		qcom,master-id = <86>;
+		status = "disabled";
+	};
+
+	spi_6: spi@7af6000 { /* BLSP1 QUP3 */
+		compatible = "qcom,spi-qup-v2";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg-names = "spi_physical", "spi_bam_physical";
+		reg = <0x7af6000 0x600>,
+			<0x7ac4000 0x1f000>;
+		interrupt-names = "spi_irq", "spi_bam_irq";
+		interrupts = <0 300 0>, <0 239 0>;
+		spi-max-frequency = <19200000>;
+		pinctrl-names = "spi_default", "spi_sleep";
+		pinctrl-0 = <&spi6_default &spi6_cs0_active>;
+		pinctrl-1 = <&spi6_sleep &spi6_cs0_sleep>;
+		clocks = <&clock_gcc clk_gcc_blsp2_ahb_clk>,
+			<&clock_gcc clk_gcc_blsp2_qup2_spi_apps_clk>;
+		clock-names = "iface_clk", "core_clk";
+		qcom,infinite-mode = <0>;
+		qcom,use-bam;
+		qcom,use-pinctrl;
+		qcom,ver-reg-exists;
+		qcom,bam-consumer-pipe-index = <6>;
+		qcom,bam-producer-pipe-index = <7>;
+		qcom,master-id = <84>;
+		status = "ok";
 	};
 
 	i2c_2: i2c@78b6000 { /* BLSP1 QUP2 */
@@ -776,6 +829,7 @@
 		dmas = <&dma_blsp2 4 64 0x20000020 0x20>,
 			<&dma_blsp2 5 32 0x20000020 0x20>;
 		dma-names = "tx", "rx";
+		status = "disabled";
 	};
 
 	slim_msm: slim@c140000{
@@ -2380,23 +2434,34 @@
 };
 
 &pm8953_mpps {
-	mpp@a100 {
+	//jeffery delete
+	//mpp@a100 {
 		/* MPP2 - PA_THERM config */
-		qcom,mode = <4>; /* AIN input */
-		qcom,invert = <1>; /* Enable MPP */
-		qcom,ain-route = <1>; /* AMUX 6 */
-		qcom,master-en = <1>;
-		qcom,src-sel = <0>; /* Function constant */
-	};
-
-	mpp@a300 {
-		/* MPP4 - CASE_THERM config */
-		qcom,mode = <4>; /* AIN input */
-		qcom,invert = <1>; /* Enable MPP */
-		qcom,ain-route = <3>; /* AMUX 8 */
-		qcom,master-en = <1>;
-		qcom,src-sel = <0>; /* Function constant */
-	};
+	//	qcom,mode = <4>; /* AIN input */
+	//	qcom,invert = <1>; /* Enable MPP */
+	//	qcom,ain-route = <1>; /* AMUX 6 */
+	//	qcom,master-en = <1>;
+	//	qcom,src-sel = <0>; /* Function constant */
+	//};
+// barnett
+//	mpp@a300 {
+//		/* MPP4 - CASE_THERM config */
+//		qcom,mode = <4>; /* AIN input */
+//		qcom,invert = <1>; /* Enable MPP */
+//		qcom,ain-route = <3>; /* AMUX 8 */
+//		qcom,master-en = <1>;
+//		qcom,src-sel = <0>; /* Function constant */
+//	};
+//barnett:configure MPP4 to pwm output mode
+    mpp@a300 {
+	        /* MPP4 - CASE_THERM config */
+	        qcom,mode = <1>; /* Digital output */
+	        qcom,invert = <0>; /* Disable invert */
+	        qcom,src-sel = <5>;  /*DTETS2*/
+	        qcom,pull = <1>;
+	        qcom,vin-sel = <3>;
+	        qcom,master-en = <1>; /* Enable MPP*/
+	    };
 };
 
 &pm8953_vadc {

@@ -327,6 +327,9 @@ int msm_hdmi_get_timing_info(
 	int ret = 0;
 
 	switch (id) {
+	case DEFAULT_VFRMT:
+		MSM_HDMI_MODES_GET_DETAILS(mode, DEFAULT_VFRMT);
+		break;
 	case HDMI_VFRMT_640x480p60_4_3:
 		MSM_HDMI_MODES_GET_DETAILS(mode, HDMI_VFRMT_640x480p60_4_3);
 		break;

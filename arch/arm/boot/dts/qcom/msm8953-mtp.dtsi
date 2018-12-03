@@ -13,9 +13,9 @@
 
 #include "msm8953-pinctrl.dtsi"
 #include "msm8953-audio-mtp.dtsi"
-
-&spi_3 { /* BLSP1 QUP3 */
-	spi-max-frequency = <16000000>;
+//barnett-> del spi3
+//&spi_3 { /* BLSP1 QUP3 */
+/*	spi-max-frequency = <16000000>;
 	maxim_sti@0 {
 		status = "disabled";
 		compatible = "maxim,maxim_sti";
@@ -37,6 +37,169 @@
 		pinctrl-2 = <&ts_release>;
 	};
 };
+->barnett */
+
+//barnett-> add i2c3 and gt9xx
+&i2c_3 {  /* BLSP1 QUP3 */ 
+    status = "ok";
+    goodix@5d {
+        compatible = "goodix,gt9xx";
+        reg = <0x5d>;
+        interrupt-parent = <&tlmm>;
+        interrupts = <65 0x2>;
+        reset-gpios = <&tlmm 64 0x0>;
+        interrupt-gpios = <&tlmm 65 0x2008>;
+        power-gpios = <&tlmm 0 0x0>;
+        vdd-supply = <&pm8953_l10>;
+        vcc-i2c-supply = <&pm8953_l6>;
+        goodix,panel-coords = <0 0 719 1405>;
+        goodix,display-coords = <0 0 719 1279>;
+        goodix,button-map= <139 172 158>;
+        goodix,enable-power-off;
+        goodix,product-id = "9147";
+        goodix,fw_name = "gtp_fw.bin";
+        pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
+        pinctrl-0 = <&ts_int_active &ts_reset_active>;
+        pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+        goodix,cfg-data0 = [
+        44 DA 02 05 05 05 35 C1 01 09
+        28 08 48 35 03 05 00 00 FF 7F
+        10 50 85 14 17 1A 14 92 00 0A
+        31 2F D3 07 03 00 00 A2 33 1D
+        00 01 00 00 00 1E 00 09 10 00
+        2A 1E 50 94 C5 02 00 0E 00 04
+        B1 21 00 96 28 00 7F 31 00 6F
+        3B 00 60 48 00 60 10 30 48 00
+        F0 4A 3A FF EF 27 00 00 00 00
+        00 01 1C 19 17 0F 01 00 01 0F
+        0F 03 04 10 42 8F 0F 19 00 00
+        46 37 08 0A 0C 0E 10 12 14 16
+        18 1A 00 00 00 00 00 00 00 00
+        00 00 00 00 00 00 00 00 00 00
+        00 00 08 20 0A 1F 0C 1E 0E 1D
+        22 05 24 04 28 00 29 02 2A 06
+        00 00 00 00 00 00 00 00 00 00
+        00 FF FF FF FF FF FF FF FF AF
+        FF FF FF FF 87 01
+        ];
+        goodix,have-touch-key;
+        goodix,driver-send-cfg;
+    };
+
+    goodix_ts@14 {
+		compatible = "goodix,gt1x";
+		reg = <0x14>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <65 0x2>;
+		goodix,rst-gpio  = <&tlmm 64 0x0>;
+		goodix,irq-gpio = <&tlmm 65 0x2008>;
+		goodix,power-gpio = <&tlmm 0 0x0>;
+		vdd_ana-supply = <&pm8953_l10>;
+		vcc_i2c-supply  = <&pm8953_l6>;
+		pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+		pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+	};
+
+	ilitek_aim@41 {
+		compatible = "ilitek,ilitek_aim";
+		reg = <0x41>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <65 0x2>;
+		pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+		pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+		status = "disabled";
+	};
+};
+//->barnett
+//barnett-> add second tp
+&i2c_2 {
+    goodix@5d {
+        compatible = "goodix,gt9xx_second";
+        reg = <0x5d>;
+        interrupt-parent = <&tlmm>;
+        interrupts = <65 0x2>;
+        reset-gpios = <&tlmm 64 0x0>;
+        interrupt-gpios = <&tlmm 65 0x2008>;
+        power-gpios = <&tlmm 0 0x0>;
+        vdd-supply = <&pm8953_l10>;
+        vcc-i2c-supply = <&pm8953_l6>;
+        goodix,panel-coords = <0 0 719 1405>;
+        goodix,display-coords = <0 0 719 1279>;
+        goodix,button-map= <139 172 158>;
+        goodix,enable-power-off;
+        goodix,product-id = "9147";
+        goodix,fw_name = "gtp_fw.bin";
+        pinctrl-names = "pmx_ts_sec_active","pmx_ts_sec_suspend";
+        pinctrl-0 = <&ts_int_active &ts_reset_active>;
+        pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+        goodix,cfg-data0 = [
+        44 DA 02 05 05 05 35 C1 01 09
+        28 08 48 35 03 05 00 00 FF 7F
+        10 50 85 14 17 1A 14 92 00 0A
+        31 2F D3 07 03 00 00 A2 33 1D
+        00 01 00 00 00 1E 00 09 10 00
+        2A 1E 50 94 C5 02 00 0E 00 04
+        B1 21 00 96 28 00 7F 31 00 6F
+        3B 00 60 48 00 60 10 30 48 00
+        F0 4A 3A FF EF 27 00 00 00 00
+        00 01 1C 19 17 0F 01 00 01 0F
+        0F 03 04 10 42 8F 0F 19 00 00
+        46 37 08 0A 0C 0E 10 12 14 16
+        18 1A 00 00 00 00 00 00 00 00
+        00 00 00 00 00 00 00 00 00 00
+        00 00 08 20 0A 1F 0C 1E 0E 1D
+        22 05 24 04 28 00 29 02 2A 06
+        00 00 00 00 00 00 00 00 00 00
+        00 FF FF FF FF FF FF FF FF AF
+        FF FF FF FF 87 01
+        ];
+        goodix,have-touch-key;
+        goodix,driver-send-cfg;
+    };
+
+	ilitek_aim@41 {
+		compatible = "ilitek,ilitek_aim";
+		reg = <0x41>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <65 0x2>;
+	        pinctrl-names = "pmx_ts_sec_active","pmx_ts_sec_suspend";
+        	pinctrl-0 = <&ts_int_active &ts_reset_active>;
+            	pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+		status = "disabled";
+	};
+
+	goodix_ts@14 {
+            compatible = "goodix,gt1x_second";
+            reg = <0x14>;
+            interrupt-parent = <&tlmm>;
+            interrupts = <65 0x2>;
+            goodix,rst-gpio  = <&tlmm 64 0x0>;
+            goodix,irq-gpio = <&tlmm 65 0x2008>;
+            goodix,power-gpio = <&tlmm 0 0x0>;
+            vdd_ana-supply = <&pm8953_l10>;
+            vcc_i2c-supply  = <&pm8953_l6>;
+            pinctrl-names = "pmx_ts_sec_active","pmx_ts_sec_suspend";
+            pinctrl-0 = <&ts_sec_int_active &ts_sec_reset_active>;
+            pinctrl-1 = <&ts_sec_int_suspend &ts_sec_reset_suspend>;
+	};
+ 	
+     lt8912@48 {
+	status = "disabled";
+        compatible = "qcom,lt8912";
+        reg = <0x48>;
+        instance_id = <0>;
+        //lt,enable-audio;
+        pinctrl-names = "pmx_lt8912_active",
+                       "pmx_lt8912_suspend";
+        pinctrl-0 = <&lt8912_int_active &lt8912_rst_active>;
+        pinctrl-1 = <&lt8912_int_suspend &lt8912_rst_suspend>;
+        lt,irq-gpio = <&tlmm 98 0x2002>;
+        lt,rst-gpio = <&tlmm 99 0x2002>;
+    };
+ };
+//->barnett
 
 &i2c_5 { /* BLSP2 QUP1 (NFC) */
 	nq@28 {
@@ -55,6 +218,7 @@
 		pinctrl-1 = <&nfc_int_suspend &nfc_disable_suspend>;
 		clocks = <&clock_gcc clk_bb_clk2_pin>;
 		clock-names = "ref_clk";
+		status = "disabled";
 	};
 };
 
@@ -69,14 +233,6 @@
 		pinctrl-names = "tlmm_gpio_key_active","tlmm_gpio_key_suspend";
 		pinctrl-0 = <&gpio_key_active>;
 		pinctrl-1 = <&gpio_key_suspend>;
-
-		camera_focus {
-			label = "camera_focus";
-			gpios = <&tlmm 87 0x1>;
-			linux,input-type = <1>;
-			linux,code = <0x210>;
-			debounce-interval = <15>;
-		};
 
 		camera_snapshot {
 			label = "camera_snapshot";
@@ -94,7 +250,7 @@
 			debounce-interval = <15>;
 		};
 	};
-
+/*barnett-> rm improvetouch
 	hbtp {
 		compatible = "qcom,hbtp-input";
 		vcc_ana-supply = <&pm8953_l10>;
@@ -106,8 +262,17 @@
 		qcom,dig-vtg-min = <1800000>;
 		qcom,dig-vtg-max = <1800000>;
 	};
+->barnett*/
+//barnett:add dsi1 bridge for dual mipi dsi
+    qcom,dsi1_bridge {
+        compatible = "qcom,dsi1_bridge";
+        instance_id = <0>;
+        mdss-dsi-bl-pmic-pwm-frequency = <100>;
+        mdss-dsi-bl-pmic-bank-select = <0>;
+        mdss-dsi-bl-max-level = <4095>;
+    };
 };
-
+/*
 &pmi_haptic{
 	qcom,actuator-type = "lra";
 	qcom,lra-auto-res-mode="qwd";
@@ -115,7 +280,7 @@
 	qcom,lra-res-cal-period = <0>;
 	qcom,wave-play-rate-us = <4165>;
 };
-
+*/
 &wled {
 	qcom,cons-sync-write-delay-us = <1000>;
 };
@@ -133,31 +298,81 @@
 };
 
 &mdss_dsi {
-	hw-config = "single_dsi";
+	hw-config = "dual_dsi"; //"single_dsi";
 };
 
 &mdss_dsi0 {
-	qcom,dsi-pref-prim-pan = <&dsi_truly_1080_vid>;
+	qcom,dsi-pref-prim-pan = <&dsi_sn65dsi84_1024p_video>;
 	pinctrl-names = "mdss_default", "mdss_sleep";
 	pinctrl-0 = <&mdss_dsi_active &mdss_te_active>;
 	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend>;
 
 	qcom,platform-te-gpio = <&tlmm 24 0>;
 	qcom,platform-reset-gpio = <&tlmm 61 0>;
-	qcom,platform-bklight-en-gpio = <&tlmm 59 0>;
+//	qcom,platform-bklight-en-gpio = <&tlmm 59 0>; //not use
 };
 
 &mdss_dsi1 {
 	status = "disabled";
-	qcom,dsi-pref-prim-pan = <&dsi_adv7533_1080p>;
+	qcom,dsi-pref-prim-pan = <&dsi_hx8394f_720p_dsi1_video>;
 	pinctrl-names = "mdss_default", "mdss_sleep";
-	pinctrl-0 = <&mdss_dsi_active &mdss_te_active>;
-	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend>;
+	pinctrl-0 = <&mdss_dsi1_active &mdss_te1_active>;
+	pinctrl-1 = <&mdss_dsi1_suspend &mdss_te1_suspend>;
 
+	qcom,bridge-index = <0>;
 	qcom,pluggable;
-	qcom,platform-te-gpio = <&tlmm 24 0>;
-	qcom,platform-reset-gpio = <&tlmm 61 0>;
-	qcom,platform-bklight-en-gpio = <&tlmm 59 0>;
+	qcom,platform-te-gpio = <&tlmm 25 0>;
+	qcom,platform-reset-gpio = <&tlmm 87 0>;
+//	qcom,platform-bklight-en-gpio = <&tlmm 59 0>; //not use
+};
+
+&dsi_sn65dsi84_1024p_video {
+        qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
+        qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+};
+
+&dsi_ili9881c_720p_video {
+	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+	//qcom,mdss-dsi-pan-enable-dynamic-fps;
+	//qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_vfp";
+	//qcom,cont-splash-enabled;
+};
+
+/*barnett: backlight control by pwm*/
+&dsi_ili9881c_720p_dsi1_video {
+    qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+    //qcom,mdss-dsi-pan-enable-dynamic-fps;
+    //qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_vfp";
+    //qcom,cont-splash-enabled;
+
+    qcom,dba-panel;
+    qcom,bridge-name = "dsi1-bridge";
+};
+
+&dsi_hx8394f_720p_video {
+	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+	//qcom,mdss-dsi-pan-enable-dynamic-fps;
+	//qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_vfp";
+	//qcom,cont-splash-enabled;
+};
+
+/*barnett: backlight control by pwm*/
+&dsi_hx8394f_720p_dsi1_video {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+	//qcom,mdss-dsi-pan-enable-dynamic-fps;
+	//qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_vfp";
+	//qcom,cont-splash-enabled;
+
+	qcom,dba-panel;
+	qcom,bridge-name = "dsi1-bridge";
+};
+
+&dsi_lt8912_1080p {
+    qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+    qcom,dba-panel;
+    qcom,bridge-name = "lt8912";
 };
 
 &dsi_truly_1080_vid {
@@ -179,6 +394,14 @@
 	pinctrl-0 = <&uart_console_active>;
 };
 
+&blsp2_uart0 {
+	status = "ok";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart_console_sleep1>;
+};
+&blsp2_uart0_gs {
+	status = "ok";
+};
 &mem_client_3_size {
 	qcom,peripheral-size = <0x500000>;
 };
@@ -234,8 +457,7 @@
 	interrupt-names = "hc_irq", "pwr_irq", "status_irq";
 	cd-gpios = <&tlmm 133 0x1>;
 
-	qcom,clk-rates = <400000 20000000 25000000 50000000 100000000
-								200000000>;
+	qcom,clk-rates = <400000 20000000 25000000 50000000>;
 	qcom,bus-speed-mode = "SDR12", "SDR25", "SDR50", "DDR50", "SDR104";
 
 	status = "ok";
@@ -243,7 +465,7 @@
 
 &pm8953_typec {
 	ss-mux-supply = <&pm8953_l13>;
-	qcom,ssmux-gpio = <&tlmm 139 GPIO_ACTIVE_HIGH>;
+	qcom,ssmux-gpio = <&tlmm 139 GPIO_ACTIVE_LOW>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&typec_ssmux_config>;
 };

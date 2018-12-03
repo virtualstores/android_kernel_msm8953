@@ -1194,10 +1194,11 @@ static int msm_dsi_on(struct mdss_panel_data *pdata)
 
 	msm_dsi_sw_reset();
 	msm_dsi_host_init(pdata);
-
+	
+	mipi->force_clk_lane_hs = 1;
 	if (mipi->force_clk_lane_hs) {
 		u32 tmp;
-
+		pr_err("space, force clk lane hs host");
 		tmp = MIPI_INP(ctrl_base + DSI_LANE_CTRL);
 		tmp |= (1<<28);
 		MIPI_OUTP(ctrl_base + DSI_LANE_CTRL, tmp);

@@ -1324,12 +1324,10 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 	struct mipi_panel_info *mipi;
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
 	int cur_power_state;
-
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
 		return -EINVAL;
 	}
-
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
@@ -1339,7 +1337,6 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 	cur_power_state = pdata->panel_info.panel_power_state;
 	pr_debug("%s+: ctrl=%pK ndx=%d cur_power_state=%d\n", __func__,
 		ctrl_pdata, ctrl_pdata->ndx, cur_power_state);
-
 	pinfo = &pdata->panel_info;
 	mipi = &pdata->panel_info.mipi;
 
@@ -1371,7 +1368,6 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		pr_err("%s: failed to set clk src. rc=%d\n", __func__, ret);
 		goto end;
 	}
-
 	/*
 	 * Enable DSI core clocks prior to resetting and initializing DSI
 	 * Phy. Phy and ctrl setup need to be done before enabling the link
@@ -1393,7 +1389,6 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		mdss_dsi_ctrl_setup(ctrl_pdata);
 	}
 	ctrl_pdata->ctrl_state |= CTRL_STATE_DSI_ACTIVE;
-
 	/* DSI link clocks need to be on prior to ctrl sw reset */
 	mdss_dsi_clk_ctrl(ctrl_pdata, ctrl_pdata->dsi_clk_handle,
 			  MDSS_DSI_LINK_CLK, MDSS_DSI_CLK_ON);
@@ -1414,16 +1409,16 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 
 	if (mipi->force_clk_lane_hs) {
 		u32 tmp;
-
 		tmp = MIPI_INP((ctrl_pdata->ctrl_base) + 0xac);
 		tmp |= (1<<28);
 		MIPI_OUTP((ctrl_pdata->ctrl_base) + 0xac, tmp);
 		wmb();
 	}
 
-	if (pdata->panel_info.type == MIPI_CMD_PANEL)
+	if (pdata->panel_info.type == MIPI_CMD_PANEL) {
 		mdss_dsi_clk_ctrl(ctrl_pdata, ctrl_pdata->dsi_clk_handle,
 				  MDSS_DSI_ALL_CLKS, MDSS_DSI_CLK_OFF);
+	}
 
 end:
 	pr_debug("%s-:\n", __func__);
@@ -1883,10 +1878,11 @@ static void __mdss_dsi_calc_dfps_delay(struct mdss_panel_data *pdata)
 			((pd->timing[1] >> 1) + 1) +
 			((pd->timing[4] >> 1) + 1)) / hr_bit_to_esc_ratio);
 
-	if (pinfo->mipi.force_clk_lane_hs)
+	if (pinfo->mipi.force_clk_lane_hs) {
 		pipe_delay2 = (6 / byte_to_esc_ratio) +
 			((((pd->timing[1] >> 1) + 1) +
 			((pd->timing[4] >> 1) + 1)) / hr_bit_to_esc_ratio);
+	}
 
 	/* 130 us pll delay recommended by h/w doc */
 	pll_delay = ((130 * esc_clk_rate) / 1000000) * 2;
@@ -1930,7 +1926,6 @@ static int __mdss_dsi_dfps_calc_clks(struct mdss_panel_data *pdata,
 				__func__);
 		return rc;
 	}
-
 	__mdss_dsi_dyn_refresh_config(ctrl_pdata);
 
 	if (phy_rev == DSI_PHY_REV_20)

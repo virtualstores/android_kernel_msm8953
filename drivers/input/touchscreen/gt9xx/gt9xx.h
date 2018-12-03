@@ -1,6 +1,6 @@
 /* drivers/input/touchscreen/gt9xx.h
  *
- * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
  *
  * Linux Foundation chooses to take subject only to the GPLv2 license
  * terms, and distributes only under these terms.
@@ -41,12 +41,18 @@
 #define GOODIX_MAX_CFG_GROUP	6
 #define GTP_FW_NAME_MAXSIZE	50
 
+#define PINCTRL_STATE_ACTIVE        "pmx_ts_active"
+#define PINCTRL_STATE_SUSPEND       "pmx_ts_suspend"
+#define PINCTRL_STATE_RELEASE       "pmx_ts_release"
+
 struct goodix_ts_platform_data {
 	int irq_gpio;
 	u32 irq_gpio_flags;
 	int reset_gpio;
 	u32 reset_gpio_flags;
-	const char *product_id;
+	int power_gpio;
+	u32 power_gpio_flags;
+	char product_id[5];		//joseph modified 20160309
 	const char *fw_name;
 	u32 x_max;
 	u32 y_max;
@@ -72,6 +78,10 @@ struct goodix_ts_platform_data {
 };
 struct goodix_ts_data {
 	spinlock_t irq_lock;
+    struct pinctrl *ts_pinctrl;
+    struct pinctrl_state *pinctrl_state_active;
+    struct pinctrl_state *pinctrl_state_suspend;
+    struct pinctrl_state *pinctrl_state_release;
 	struct i2c_client *client;
 	struct input_dev  *input_dev;
 	struct goodix_ts_platform_data *pdata;
@@ -116,21 +126,22 @@ extern u16 show_len;
 extern u16 total_len;
 
 /***************************PART1:ON/OFF define*******************************/
-#define GTP_CUSTOM_CFG			1
-#define GTP_ESD_PROTECT			0
+#define GTP_CUSTOM_CFG			0
+#define GTP_ESD_PROTECT			1     //joseph modified 2015.11.30
 
 #define GTP_IRQ_TAB            {\
 				IRQ_TYPE_EDGE_RISING,\
 				IRQ_TYPE_EDGE_FALLING,\
 				IRQ_TYPE_LEVEL_LOW,\
-				IRQ_TYPE_LEVEL_HIGH\
+				IRQ_TYPE_LEVEL_HIGH,\
+				IRQF_ONESHOT\
 				}
 
 
 #define GTP_IRQ_TAB_RISING	0
 #define GTP_IRQ_TAB_FALLING	1
 #if GTP_CUSTOM_CFG
-#define GTP_MAX_HEIGHT	        864
+#define GTP_MAX_HEIGHT		800
 #define GTP_MAX_WIDTH		480
 #define GTP_INT_TRIGGER		GTP_IRQ_TAB_RISING
 #else

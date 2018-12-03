@@ -3993,8 +3993,11 @@ static int android_bind(struct usb_composite_dev *cdev)
 		sizeof(manufacturer_string) - 1);
 	strlcpy(product_string, "Android", sizeof(product_string) - 1);
 	strlcpy(serial_string, "0123456789ABCDEF", sizeof(serial_string) - 1);
-
-	id = usb_string_id(cdev);
+ #if defined(CONFIG_DEBUG_ATOMIC_SLEEP)
+    id=0;
+ #else 
+    id = usb_string_id(cdev);
+ #endif
 	if (id < 0)
 		return id;
 	strings_dev[STRING_SERIAL_IDX].id = id;

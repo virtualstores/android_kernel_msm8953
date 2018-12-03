@@ -138,6 +138,17 @@
 				qcom,hw-settle-time = <0>;
 				qcom,fast-avg-setup = <0>;
 			};
+			
+			chan@10 {
+                label = "mpp1_adc";
+				reg = <0x10>; // channel for MPP1
+				qcom,decimation = <0>;
+				qcom,pre-div-channel-scaling = <0>; 
+				qcom,calibration-type = "absolute";
+				qcom,scale-function = <0>;
+				qcom,hw-settle-time = <1>;
+				qcom,fast-avg-setup = <2>;
+            };
 		};
 
 		pmi8950_gpios: gpios {
@@ -174,7 +185,10 @@
 			mpp@a000 {
 				reg = <0xa000 0x100>;
 				qcom,pin-num = <1>;
-				status = "disabled";
+				qcom,mode = <4>; // A-input
+				qcom,src-sel = <0>; //MPP Constant
+				qcom,ain-route = <0>; // QPNP_PIN_AIN_AMUX_CH5 = 0 for MPP1
+				qcom,master-en = <1>; //Enable MPP
 			};
 
 			mpp@a100 {
@@ -216,6 +230,7 @@
 			qcom,force-aicl-rerun;
 			qcom,aicl-rerun-period-s = <180>;
 			qcom,autoadjust-vfloat;
+			qcom,override-usb-current;
 
 			qcom,chgr@1000 {
 				reg = <0x1000 0x100>;
@@ -324,7 +339,7 @@
 			qcom,fg-iterm-ma = <150>;
 			qcom,fg-chg-iterm-ma = <100>;
 			qcom,pmic-revid = <&pmi8950_revid>;
-			qcom,fg-cutoff-voltage-mv = <3500>;
+			//qcom,fg-cutoff-voltage-mv = <3400>;//jeffery modify cutoff voltage to 3200 20180408
 			qcom,cycle-counter-en;
 			qcom,capacity-learning-on;
 
@@ -408,7 +423,19 @@
 		qcom,leds@a100 {
 			compatible = "qcom,leds-qpnp";
 			reg = <0xa100 0x100>;
+			qcom,led_mpp_2 {
 			label = "mpp";
+			linux,name = "green";
+			linux,default-trigger = "none";
+			qcom,default-state = "off";
+			qcom,current-setting = <20>;
+			qcom,max-current = <40>;
+			qcom,id = <6>;
+			qcom,source-sel = <1>;
+			qcom,mode-ctrl = <0x61>;
+			qcom,mode = "manual";
+			};
+
 		};
 	};
 

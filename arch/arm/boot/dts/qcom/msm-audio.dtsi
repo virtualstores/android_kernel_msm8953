@@ -323,14 +323,13 @@
 			"RX_BIAS", "MCLK",
 			"SPK_RX_BIAS", "MCLK",
 			"INT_LDO_H", "MCLK",
-			"MIC BIAS External", "Handset Mic",
-			"MIC BIAS External2", "Headset Mic",
-			"MIC BIAS External", "Secondary Mic",
-			"AMIC1", "MIC BIAS External",
-			"AMIC2", "MIC BIAS External2",
-			"AMIC3", "MIC BIAS External",
-			"WSA_SPK OUT", "VDD_WSA_SWITCH",
-			"SpkrMono WSA_IN", "WSA_SPK OUT";
+			"MIC BIAS Internal1", "Handset Mic",	/*joseph modified*/
+			"MIC BIAS Internal2", "Headset Mic",
+			"MIC BIAS Internal1", "Secondary Mic",
+			"AMIC1", "MIC BIAS Internal1",
+			"AMIC2", "MIC BIAS Internal2",
+			"AMIC3", "MIC BIAS Internal1";
+
 
 		qcom,hdmi-dba-codec-rx;
 
@@ -534,85 +533,6 @@
 				"msm-dai-q6-dev.16396";
 		asoc-codec = <&stub_codec>, <&hdmi_dba>;
 		asoc-codec-names = "msm-stub-codec.1", "msm-hdmi-dba-codec-rx";
-	};
-
-	i2c@78b6000 {
-		wsa881x_i2c_e: wsa881x-i2c-codec@e {
-			status = "disabled";
-			compatible = "qcom,wsa881x-i2c-codec";
-			reg = <0x0e>;
-			qcom,msm-gpios = "wsa_clk",
-					"wsa_reset",
-					"wsa_vi";
-			qcom,pinctrl-names = "all_off",
-					"wsa_clk",
-					"wsa_active",
-					"wsa_clk_active",
-					"wsa_vi",
-					"wsa_clk_vi",
-					"wsa_active_vi",
-					"wsa_all";
-			pinctrl-names = "all_off",
-					"wsa_clk",
-					"wsa_active",
-					"wsa_clk_active",
-					"wsa_vi",
-					"wsa_clk_vi",
-					"wsa_active_vi",
-					"wsa_all";
-			pinctrl-0 = <&wsa_clk_off &wsa_reset_off &wsa_vi_off>;
-			pinctrl-1 = <&wsa_clk_on &wsa_reset_off &wsa_vi_off>;
-			pinctrl-2 = <&wsa_clk_off &wsa_reset_on &wsa_vi_off>;
-			pinctrl-3 = <&wsa_clk_on &wsa_reset_on &wsa_vi_off>;
-			pinctrl-4 = <&wsa_clk_off &wsa_reset_off &wsa_vi_on>;
-			pinctrl-5 = <&wsa_clk_on &wsa_reset_off &wsa_vi_on>;
-			pinctrl-6 = <&wsa_clk_off &wsa_reset_on &wsa_vi_on>;
-			pinctrl-7 = <&wsa_clk_on &wsa_reset_on &wsa_vi_on>;
-		};
-		wsa881x_i2c_44: wsa881x-i2c-codec@44 {
-			status = "disabled";
-
-			compatible = "qcom,wsa881x-i2c-codec";
-			reg = <0x44>;
-		};
-		wsa881x_i2c_f: wsa881x-i2c-codec@f {
-			status = "disabled";
-
-			compatible = "qcom,wsa881x-i2c-codec";
-			reg = <0x0f>;
-			qcom,msm-gpios = "wsa_clk",
-					"wsa_reset",
-					"wsa_vi";
-			qcom,pinctrl-names = "all_off",
-					"wsa_clk",
-					"wsa_active",
-					"wsa_clk_active",
-					"wsa_vi",
-					"wsa_clk_vi",
-					"wsa_active_vi",
-					"wsa_all";
-			pinctrl-names = "all_off",
-					"wsa_clk",
-					"wsa_active",
-					"wsa_clk_active",
-					"wsa_vi",
-					"wsa_clk_vi",
-					"wsa_active_vi",
-					"wsa_all";
-			pinctrl-0 = <&wsa_clk_off &wsa_reset_off &wsa_vi_off>;
-			pinctrl-1 = <&wsa_clk_on &wsa_reset_off &wsa_vi_off>;
-			pinctrl-2 = <&wsa_clk_off &wsa_reset_on &wsa_vi_off>;
-			pinctrl-3 = <&wsa_clk_on &wsa_reset_on &wsa_vi_off>;
-			pinctrl-4 = <&wsa_clk_off &wsa_reset_off &wsa_vi_on>;
-			pinctrl-5 = <&wsa_clk_on &wsa_reset_off &wsa_vi_on>;
-			pinctrl-6 = <&wsa_clk_off &wsa_reset_on &wsa_vi_on>;
-			pinctrl-7 = <&wsa_clk_on &wsa_reset_on &wsa_vi_on>;
-		};
-		wsa881x_i2c_45: wsa881x-i2c-codec@45 {
-			status = "disabled";
-			compatible = "qcom,wsa881x-i2c-codec";
-			reg = <0x45>;
-		};
 	};
 
 	wcd9xxx_intc: wcd9xxx-irq {

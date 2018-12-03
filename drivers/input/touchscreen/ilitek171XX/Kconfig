@@ -1,0 +1,14 @@
+#
+# Ilitek 171XX driver
+#
+config ILITEK171XX_DRIVER
+	tristate "Ilitek 171XX driver"
+	depends on TOUCHSCREEN_ILITEK171XX
+	help
+	  This is the main file for touchpanel driver for Ilitek171XX 
+	  touchscreens
+
+	  Say Y here if you have a Ilitek171XX touch screen connected
+	  to your system
+
+	  If unsure, say N.

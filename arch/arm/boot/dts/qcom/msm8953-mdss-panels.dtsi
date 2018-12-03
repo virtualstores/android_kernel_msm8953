@@ -21,6 +21,12 @@
 #include "dsi-panel-r69006-1080p-video.dtsi"
 #include "dsi-panel-r69006-1080p-cmd.dtsi"
 #include "dsi-panel-truly-wuxga-video.dtsi"
+#include "dsi-panel-ili9881c-720p-video.dtsi"
+#include "dsi-panel-ili9881c-720p-dsi1-video.dtsi"
+#include "dsi-panel-hx8394f-720p-video.dtsi"
+#include "dsi-panel-hx8394f-720p-dsi1-video.dtsi"
+#include "dsi-panel-lt8912-1080p-video.dtsi"
+#include "dsi-panel-sn65dsi84-1024p-video.dtsi"
 
 &soc {
 	dsi_panel_pwr_supply: dsi_panel_pwr_supply {
@@ -45,6 +51,59 @@
 			qcom,supply-disable-load = <100>;
 		};
 	};
+};
+
+&dsi_lt8912_1080p {
+	qcom,mdss-dsi-panel-timings-phy-v2 = [24 1f 08 09 05 03 04 a0
+		24 1f 08 09 05 03 04 a0
+		24 1f 08 09 05 03 04 a0
+		24 1f 08 09 05 03 04 a0
+		24 1b 08 09 05 03 04 a0];
+};
+
+&dsi_sn65dsi84_1024p_video {
+	qcom,mdss-dsi-panel-timings-phy-v2 = [
+	1c 19 02 04 01 03 04 a0
+	1c 19 02 04 01 03 04 a0
+	1c 19 02 04 01 03 04 a0
+	1c 19 02 04 01 03 04 a0
+	1c 08 02 03 01 03 04 a0];
+};
+
+&dsi_ili9881c_720p_video {                       
+    qcom,mdss-dsi-panel-timings-phy-v2 = [       
+        1e 19 04 05 02 03 04 a0
+	1e 19 04 05 02 03 04 a0
+	1e 19 04 05 02 03 04 a0
+	1e 19 04 05 02 03 04 a0
+	1e 0a 03 04 02 03 04 a0];
+}; 
+
+&dsi_ili9881c_720p_dsi1_video {
+    qcom,mdss-dsi-panel-timings-phy-v2 = [
+        1e 1b 04 06 02 03 04 a0     /*Data 0*/
+        1e 1b 04 06 02 03 04 a0     /*Data 1*/
+        1e 1b 04 06 02 03 04 a0     /*Data 2*/
+        1e 1b 04 06 02 03 04 a0     /*Data 3*/
+        1e 0d 04 05 02 03 04 a0];   /*CLK lane*/
+};
+
+&dsi_hx8394f_720p_video {
+    qcom,mdss-dsi-panel-timings-phy-v2 = [
+        1e 1b 04 05 02 03 04 a0     /*Data 0*/
+        1e 1b 04 05 02 03 04 a0     /*Data 1*/
+        1e 1b 04 05 02 03 04 a0     /*Data 2*/
+        1e 1b 04 05 02 03 04 a0     /*Data 3*/
+        1e 0d 03 05 02 03 04 a0];   /*CLK lane*/
+};
+
+&dsi_hx8394f_720p_dsi1_video {
+    qcom,mdss-dsi-panel-timings-phy-v2 = [
+        1e 1b 04 05 02 03 04 a0     /*Data 0*/
+        1e 1b 04 05 02 03 04 a0     /*Data 1*/
+        1e 1b 04 05 02 03 04 a0     /*Data 2*/
+        1e 1b 04 05 02 03 04 a0     /*Data 3*/
+        1e 0d 03 05 02 03 04 a0];   /*CLK lane*/
 };
 
 &dsi_truly_1080_vid {

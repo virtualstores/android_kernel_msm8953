@@ -1123,6 +1123,16 @@ config TOUCHSCREEN_GT9XX
 
           If unsure, say N.
 
+config TOUCHSCREEN_GT9XX_SEC
+	bool "Goodix touchpanel GT9xx_SEC series"
+	depends on I2C
+	help
+	  Say Y here if you have a Goodix GT9xx touchscreen.
+	  Gt9xx controllers are multi touch controllers which can
+	  report 5 touches at a time.
+
+          If unsure, say N.
+
 config TOUCHSCREEN_MAXIM_STI
 	tristate "Maxim based STI touchscreens"
 	depends on SPI_MASTER
@@ -1135,6 +1145,17 @@ config TOUCHSCREEN_MAXIM_STI
 	  To compile this driver as a module, choose M here: the
 	  module will be called maxim_sti.
 
-source "drivers/input/touchscreen/gt9xx/Kconfig"
+config TOUCHSCREEN_ILITEK171XX
+	tristate "Ilitek 171XX touchscreens"
+	depends on I2C
+	help
+	  Say Y here if you have a Ilitek 171XX based touchscreen.
+	  Does not support DTS and needs to be configued within the 
+	  common.h file
+	  
+	  If unsure, say N
 
+source "drivers/input/touchscreen/gt9xx/Kconfig"
+source "drivers/input/touchscreen/gt9xx_second/Kconfig"
+source "drivers/input/touchscreen/ilitek171XX/Kconfig"
 endif

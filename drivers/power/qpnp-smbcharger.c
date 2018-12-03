@@ -268,6 +268,8 @@ struct smbchg_chip {
 	bool				skip_usb_notification;
 	u32				vchg_adc_channel;
 	struct qpnp_vadc_chip		*vchg_vadc_dev;
+	struct qpnp_vadc_chip		*mpp1_vadc_dev;
+	struct qpnp_vadc_chip		*mpp2_vadc_dev;
 
 	/* voters */
 	struct votable			*fcc_votable;
@@ -1153,6 +1155,39 @@ static int get_prop_batt_voltage_now(struct smbchg_chip *chip)
 	return uv;
 }
 
+/*************jeffery add pm-mpp2 pmi-mpp1 adc code 20171128*********/
+static int get_prop_mpp2_voltage_now(struct smbchg_chip *chip)
+{
+	int rc = 0;
+	struct qpnp_vadc_result results;
+	if(chip->mpp2_vadc_dev){
+		rc = qpnp_vadc_read(chip->mpp2_vadc_dev, P_MUX2_1_3, &results); 
+		if (rc) {
+			pr_err("Unable to read mpp2 voltage rc=%d\n", rc);
+			return 0;
+		}
+		//pr_info("mpp2 voltage =%lld\n",results.physical);
+	}
+
+	return results.physical;
+}
+
+static int get_prop_mpp1_voltage_now(struct smbchg_chip *chip)
+{
+	int rc = 0;
+	struct qpnp_vadc_result results;
+	if(chip->mpp1_vadc_dev){
+		rc = qpnp_vadc_read(chip->mpp1_vadc_dev, P_MUX1_1_1, &results); 
+		if (rc) {
+			pr_err("Unable to read mpp1 voltage rc=%d\n", rc);
+			return 0;
+		}
+		//pr_info("mpp1 voltage =%lld\n",results.physical);
+	}
+
+	return results.physical;
+}
+/*******************add end ********************/
 #define DEFAULT_BATT_VOLTAGE_MAX_DESIGN	4200000
 static int get_prop_batt_voltage_max_design(struct smbchg_chip *chip)
 {
@@ -3765,6 +3800,10 @@ static void smbchg_external_power_changed(struct power_supply *psy)
 
 	pr_smb(PR_MISC, "usb type = %s current_limit = %d\n",
 			usb_type_name, current_limit);
+	
+	//NOTE(Nyman): Edit here to increase/decrease the current limit
+	if(current_limit == 0)
+		current_limit = 2000;
 
 	rc = vote(chip->usb_icl_votable, PSY_ICL_VOTER, true,
 				current_limit);
@@ -5819,6 +5858,8 @@ static enum power_supply_property smbchg_battery_properties[] = {
 	POWER_SUPPLY_PROP_RESTRICTED_CHARGING,
 	POWER_SUPPLY_PROP_ALLOW_HVDCP3,
 	POWER_SUPPLY_PROP_MAX_PULSE_ALLOWED,
+	POWER_SUPPLY_PROP_MPP2_VOLTAGE,
+	POWER_SUPPLY_PROP_MPP1_VOLTAGE,
 };
 
 static int smbchg_battery_set_property(struct power_supply *psy,
@@ -6034,6 +6075,12 @@ static int smbchg_battery_get_property(struct power_supply *psy,
 		break;
 	case POWER_SUPPLY_PROP_MAX_PULSE_ALLOWED:
 		val->intval = chip->max_pulse_allowed;
+		break;
+	case POWER_SUPPLY_PROP_MPP2_VOLTAGE:
+		val->intval = get_prop_mpp2_voltage_now(chip);
+		break;
+	case POWER_SUPPLY_PROP_MPP1_VOLTAGE:
+		val->intval = get_prop_mpp1_voltage_now(chip);
 		break;
 	default:
 		return -EINVAL;
@@ -7598,6 +7645,12 @@ static int smb_parse_dt(struct smbchg_chip *chip)
 	chip->cfg_override_usb_current = of_property_read_bool(node,
 				"qcom,override-usb-current");
 
+        if(chip->cfg_override_usb_current) {
+		dev_err(chip->dev, "space, Override is true");
+	} else {
+		dev_err(chip->dev, "space, Override is false");
+	}
+
 	return 0;
 }
 
@@ -8057,7 +8110,8 @@ static int smbchg_probe(struct spmi_device *spmi)
 	int rc;
 	struct smbchg_chip *chip;
 	struct power_supply *usb_psy, *typec_psy = NULL;
-	struct qpnp_vadc_chip *vadc_dev = NULL, *vchg_vadc_dev = NULL;
+	struct qpnp_vadc_chip *vadc_dev = NULL, *vchg_vadc_dev = NULL, 
+					*mpp1_vadc_dev = NULL, *mpp2_vadc_dev = NULL;
 	const char *typec_psy_name;
 
 	usb_psy = power_supply_get_by_name("usb");
@@ -8105,7 +8159,29 @@ static int smbchg_probe(struct spmi_device *spmi)
 			return rc;
 		}
 	}
-
+/*************jeffery add pm-mpp2 pmi-mpp1 adc code 20171128*********/
+	if (of_find_property(spmi->dev.of_node, "qcom,mpp2_adc-vadc", NULL)) {
+		mpp2_vadc_dev = qpnp_get_vadc(&spmi->dev, "mpp2_adc");
+		if (IS_ERR(mpp2_vadc_dev)) {
+			rc = PTR_ERR(mpp2_vadc_dev);
+			if (rc != -EPROBE_DEFER)
+				dev_err(&spmi->dev, "Couldn't get vadc 'mpp2' rc=%d\n",
+						rc);
+			return rc;
+		}
+	}
+	
+	if (of_find_property(spmi->dev.of_node, "qcom,mpp1_adc-vadc", NULL)) {
+		mpp1_vadc_dev = qpnp_get_vadc(&spmi->dev, "mpp1_adc");
+		if (IS_ERR(mpp1_vadc_dev)) {
+			rc = PTR_ERR(mpp1_vadc_dev);
+			if (rc != -EPROBE_DEFER)
+				dev_err(&spmi->dev, "Couldn't get vadc 'mpp1' rc=%d\n",
+						rc);
+			return rc;
+		}
+	}
+/***********add end *****************/
 	chip = devm_kzalloc(&spmi->dev, sizeof(*chip), GFP_KERNEL);
 	if (!chip) {
 		dev_err(&spmi->dev, "Unable to allocate memory\n");
@@ -8193,6 +8269,8 @@ static int smbchg_probe(struct spmi_device *spmi)
 	init_completion(&chip->usbin_uv_raised);
 	chip->vadc_dev = vadc_dev;
 	chip->vchg_vadc_dev = vchg_vadc_dev;
+	chip->mpp1_vadc_dev = mpp1_vadc_dev;
+	chip->mpp2_vadc_dev = mpp2_vadc_dev;
 	chip->spmi = spmi;
 	chip->dev = &spmi->dev;
 	chip->usb_psy = usb_psy;

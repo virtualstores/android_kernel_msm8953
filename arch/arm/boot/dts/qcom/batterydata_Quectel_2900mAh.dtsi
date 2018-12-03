@@ -1,0 +1,49 @@
+
+qcom,3198508_quectel_sc55etc_2700mah_averaged_masterslave_nov29th2017 {
+	/* #3198508_Quectel_SC55etc_2700mAh_averaged_MasterSlave_Nov29th2017*/
+	qcom,max-voltage-uv = <4200000>;
+	qcom,nom-batt-capacity-mah = <2900>;
+	qcom,batt-id-kohm = <100>;
+	qcom,battery-beta = <4050>;
+	qcom,battery-type = "3198508_quectel_sc55etc_2700mah_averaged_masterslave_nov29th2017";
+	qcom,chg-rslow-comp-c1 = <1886048>;
+	qcom,chg-rslow-comp-c2 = <1442151>;
+	qcom,chg-rs-to-rslow = <645776>;
+	qcom,chg-rslow-comp-thr = <0x99>;
+	qcom,checksum = <0xA5E2>;
+	qcom,gui-version = "PMI8950GUI - 2.0.0.16";
+	qcom,fg-profile-data = [
+		 B4 82 B4 79 
+		 E5 7D 02 73 
+		 3D 83 3A 72 
+		 49 7D 3F 78 
+		 72 81 6C A0 
+		 DD BE 2E CB 
+		 83 0F CF 83 
+		 A3 75 26 79 
+		 C8 6C 60 83 
+		 32 5E 9D 83 
+		 71 8F 5E 82 
+		 B3 98 1F B7 
+		 48 C3 52 10 
+		 85 0B 55 5B 
+		 FB 6A C6 FD 
+		 67 3D 4F 44 
+		 35 48 00 00 
+		 64 4C 35 45 
+		 E2 4A 00 00 
+		 00 00 00 00 
+		 00 00 00 00 
+		 C8 6A DD 69 
+		 40 6A AB 83 
+		 2B 6F 7D 69 
+		 86 80 97 8B 
+		 33 6C 83 63 
+		 22 67 32 A8 
+		 26 77 61 DC 
+		 56 A0 71 0C 
+		 28 00 FF 36 
+		 F0 11 30 03 
+		 00 00 00 0C 
+	];
+};

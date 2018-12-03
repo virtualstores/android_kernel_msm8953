@@ -182,6 +182,7 @@ struct msm_hdmi_mode_timing_info {
 #define HDMI_VFRMT_3840x2160p30_64_27   105
 #define HDMI_VFRMT_3840x2160p50_64_27   106
 #define HDMI_VFRMT_3840x2160p60_64_27   107
+#define DEFAULT_VFRMT					108
 
 /* Video Identification Codes from 107-127 are reserved for the future */
 #define HDMI_VFRMT_END			127
@@ -253,6 +254,10 @@ struct msm_hdmi_mode_timing_info {
 	{VFRMT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false,		\
 		HDMI_RES_AR_INVALID}
 
+#define DEFAULT_VFRMT_TIMING				\
+	{DEFAULT_VFRMT, 720/*active_h*/, 52/*front_porch_h*/, 36/*pulse_width_h*/, 100/*back_porch_h*/, false,	\
+	 1280/*active_v*/, 8/*front_porch_v*/, 4/*pulse_width_v*/, 20/*back_porch_v*/, false, \
+	 71477/*pixel_freq/1000*/, 60000/*refresh_rate/1000*/, false, true, HDMI_RES_AR_16_9, 0}
 #define HDMI_VFRMT_640x480p60_4_3_TIMING				\
 	{HDMI_VFRMT_640x480p60_4_3, 640, 16, 96, 48, true,		\
 	 480, 10, 2, 33, true, 25200, 60000, false, true, HDMI_RES_AR_4_3, 0}
@@ -452,6 +457,8 @@ do {	\
 			HDMI_VFRMT_720x480p60_16_9);	\
 		MSM_HDMI_MODES_SET_TIMING(__lut,	\
 			HDMI_VFRMT_1280x720p60_16_9);	\
+		MSM_HDMI_MODES_SET_TIMING(__lut,	\
+			DEFAULT_VFRMT);	\
 		MSM_HDMI_MODES_SET_TIMING(__lut,	\
 			HDMI_VFRMT_1920x1080i60_16_9);	\
 		MSM_HDMI_MODES_SET_TIMING(__lut,	\
