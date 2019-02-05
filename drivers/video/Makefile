@@ -15,4 +15,4 @@ obj-$(CONFIG_VIDEOMODE_HELPERS) += of_display_timing.o of_videomode.o
 endif
 
 #kyle sn65dsi84
-obj-y += mipi_convert.o
+obj-y += sn65dsi83_ti.o
