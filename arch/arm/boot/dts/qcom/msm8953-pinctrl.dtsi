@@ -1440,6 +1440,50 @@
 				};
 			};
 		};
+		
+		pmx_convert_bk_active {
+			qcom,pins = <&tlmm 24>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <1>;
+			label = "pmx_convert_bk_active";
+			convert_bk_active: convert_bk_active {
+				drive-strength = <8>;
+				bias-pull-up;
+			};
+		};
+
+		pmx_convert_bk_suspend {
+			qcom,pins = <&tlmm 24>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <1>;
+			label = "pmx_convert_bk_suspend";
+			convert_bk_suspend: convert_bk_suspend {
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+
+		pmx_convert_rst_active {
+			qcom,pins = <&tlmm 12>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <1>;
+			label = "pmx_convert_rst_active";
+			convert_rst_active: convert_rst_active {
+				drive-strength = <8>;
+				bias-pull-up;
+			};
+		};
+
+		pmx_convert_rst_suspend {
+			qcom,pins = <&tlmm 12>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <1>;
+			label = "pmx_convert_rst_suspend";
+			convert_rst_suspend: convert_rst_suspend {
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
 
 		tlmm_gpio_key {
 			gpio_key_active: gpio_key_active {

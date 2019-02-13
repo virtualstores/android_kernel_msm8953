@@ -1,0 +1,8 @@
+#include "msm8953-mdss.dtsi"
+
+/* 7 inch specific settings */
+
+&mdss_dsi0 {
+    qcom,dsi-pref-prim-pan = <&dsi_sn65dsi84_1024p_video>;
+    qcom,mdss-dsi-force-clock-lane-hs;
+};

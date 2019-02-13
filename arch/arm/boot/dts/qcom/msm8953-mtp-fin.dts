@@ -1,0 +1,11 @@
+#include "msm8953-mdss-panels.dtsi"
+
+/* 5 inch specific settings */
+
+&mdss_dsi0 {
+    qcom,dsi-pref-prim-pan = <&dsi_hx8394f_720p_video>; 
+}
+
+&mdss_dsi1 {
+    qcom,dsi-pref-prim-pan = <&dsi_hx8394f_720p_dsi1_video>;
+}

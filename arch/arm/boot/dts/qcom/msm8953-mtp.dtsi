@@ -43,6 +43,7 @@
 &i2c_3 {  /* BLSP1 QUP3 */ 
     status = "ok";
     goodix@5d {
+	status = "disabled";
         compatible = "goodix,gt9xx";
         reg = <0x5d>;
         interrupt-parent = <&tlmm>;
@@ -86,7 +87,14 @@
         goodix,driver-send-cfg;
     };
 
+    sn65dsi84@2c {
+        compatible = "vs,sn65dsi83";
+        reg = <0x2c>;
+        status = "ok";
+    };
+
     goodix_ts@14 {
+		status = "disabled";
 		compatible = "goodix,gt1x";
 		reg = <0x14>;
 		interrupt-parent = <&tlmm>;
@@ -159,33 +167,33 @@
         goodix,driver-send-cfg;
     };
 
-	ilitek_aim@41 {
-		compatible = "ilitek,ilitek_aim";
-		reg = <0x41>;
-		interrupt-parent = <&tlmm>;
-		interrupts = <65 0x2>;
-	        pinctrl-names = "pmx_ts_sec_active","pmx_ts_sec_suspend";
-        	pinctrl-0 = <&ts_int_active &ts_reset_active>;
-            	pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
-		status = "disabled";
-	};
+    ilitek_aim@41 {
+	compatible = "ilitek,ilitek_aim";
+	reg = <0x41>;
+	interrupt-parent = <&tlmm>;
+	interrupts = <65 0x2>;
+	pinctrl-names = "pmx_ts_sec_active","pmx_ts_sec_suspend";
+       	pinctrl-0 = <&ts_int_active &ts_reset_active>;
+       	pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+	status = "ok";
+    };
 
-	goodix_ts@14 {
-            compatible = "goodix,gt1x_second";
-            reg = <0x14>;
-            interrupt-parent = <&tlmm>;
-            interrupts = <65 0x2>;
-            goodix,rst-gpio  = <&tlmm 64 0x0>;
-            goodix,irq-gpio = <&tlmm 65 0x2008>;
-            goodix,power-gpio = <&tlmm 0 0x0>;
-            vdd_ana-supply = <&pm8953_l10>;
-            vcc_i2c-supply  = <&pm8953_l6>;
-            pinctrl-names = "pmx_ts_sec_active","pmx_ts_sec_suspend";
-            pinctrl-0 = <&ts_sec_int_active &ts_sec_reset_active>;
-            pinctrl-1 = <&ts_sec_int_suspend &ts_sec_reset_suspend>;
-	};
- 	
-     lt8912@48 {
+    goodix_ts@14 {
+        compatible = "goodix,gt1x_second";
+        reg = <0x14>;
+        interrupt-parent = <&tlmm>;
+        interrupts = <65 0x2>;
+        goodix,rst-gpio  = <&tlmm 64 0x0>;
+        goodix,irq-gpio = <&tlmm 65 0x2008>;
+        goodix,power-gpio = <&tlmm 0 0x0>;
+        vdd_ana-supply = <&pm8953_l10>;
+        vcc_i2c-supply  = <&pm8953_l6>;
+        pinctrl-names = "pmx_ts_sec_active","pmx_ts_sec_suspend";
+        pinctrl-0 = <&ts_sec_int_active &ts_sec_reset_active>;
+        pinctrl-1 = <&ts_sec_int_suspend &ts_sec_reset_suspend>;
+    };
+
+   lt8912@48 {
 	status = "disabled";
         compatible = "qcom,lt8912";
         reg = <0x48>;
